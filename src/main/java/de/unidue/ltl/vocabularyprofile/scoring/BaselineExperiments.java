@@ -7,16 +7,22 @@ import java.util.Map;
 
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.collection.CollectionReaderDescription;
+import org.apache.uima.fit.component.NoOpAnnotator;
 import org.apache.uima.fit.factory.CollectionReaderFactory;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.dkpro.lab.task.Dimension;
 import org.dkpro.lab.task.ParameterSpace;
 
+import de.tudarmstadt.ukp.dkpro.core.clearnlp.ClearNlpSegmenter;
+import de.tudarmstadt.ukp.dkpro.core.corenlp.CoreNlpLemmatizer;
+import de.tudarmstadt.ukp.dkpro.core.corenlp.CoreNlpPosTagger;
 import de.tudarmstadt.ukp.dkpro.core.corenlp.CoreNlpSegmenter;
 import de.tudarmstadt.ukp.dkpro.core.io.bincas.BinaryCasReader;
+import de.tudarmstadt.ukp.dkpro.core.opennlp.OpenNlpSegmenter;
 import de.unidue.ltl.escrito.examples.basics.Experiments_ImplBase;
 import de.unidue.ltl.escrito.io.essay.AsapEssayReader;
 import de.unidue.ltl.escrito.io.essay.AsapEssayReader.RatingBias;
+import de.unidue.ltl.vocabularyprofile.VocabAnnotator;
 import de.unidue.ltl.vocabularyprofile.io.MewsReader;
 
 public class BaselineExperiments extends Experiments_ImplBase{
@@ -106,14 +112,70 @@ public class BaselineExperiments extends Experiments_ImplBase{
 				FeatureSettings.getFeatureSetNGrams(),
 				learningsArgsDims);
 
-		runCrossValidation(pSpace, experimentName, getPreprocessing(), 10);
+		runCrossValidation(pSpace, experimentName, getPreprocessing("en"), 10);
 	}
 
-	private static AnalysisEngineDescription getPreprocessing() throws ResourceInitializationException {
-		AnalysisEngineDescription seg = createEngineDescription(CoreNlpSegmenter.class,
-				CoreNlpSegmenter.PARAM_LANGUAGE, "en");
-		return seg;
-	}
+	/*
+	 * private static AnalysisEngineDescription getPreprocessing() throws
+	 * ResourceInitializationException { AnalysisEngineDescription seg =
+	 * createEngineDescription(CoreNlpSegmenter.class,
+	 * CoreNlpSegmenter.PARAM_LANGUAGE, "en"); return seg;
+	 * 
+	 * }
+	 */
+	 public static AnalysisEngineDescription getPreprocessing(String languageCode) throws ResourceInitializationException {
+		 	
+		 	AnalysisEngineDescription seg = createEngineDescription(CoreNlpSegmenter.class,CoreNlpSegmenter.PARAM_LANGUAGE, "en");
+	        AnalysisEngineDescription tagger       = createEngineDescription(CoreNlpPosTagger.class,CoreNlpPosTagger.PARAM_LANGUAGE, "en");
+
+	        AnalysisEngineDescription lemmatizer   = createEngineDescription(CoreNlpLemmatizer.class);
+
+	        AnalysisEngineDescription vocab = createEngineDescription(VocabAnnotator.class);
+
+
+	        if (languageCode.equals("en")){
+
+	            return createEngineDescription(
+
+	                    seg,
+
+	                    tagger,
+
+	                    lemmatizer,
+
+	                    vocab
+
+	                    );
+
+	        } else if (languageCode.equals("de")){
+
+	            return createEngineDescription(
+
+	                    createEngineDescription(
+
+	                            OpenNlpSegmenter.class
+
+	                            ),
+
+	                    tagger,
+
+	                    lemmatizer,
+
+	                    createEngineDescription(NoOpAnnotator.class)
+
+	                    );
+
+	        } else {
+
+	            System.err.println("Unknown language code "+languageCode+". We currently support: en, de");
+
+	            System.exit(-1);
+
+	        }
+
+	        return null;
+
+	    }
 
 
 
