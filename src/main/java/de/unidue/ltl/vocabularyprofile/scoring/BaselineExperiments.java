@@ -13,11 +13,13 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.dkpro.lab.task.Dimension;
 import org.dkpro.lab.task.ParameterSpace;
 
+import de.tudarmstadt.ukp.dkpro.core.clearnlp.ClearNlpLemmatizer;
 import de.tudarmstadt.ukp.dkpro.core.clearnlp.ClearNlpSegmenter;
 import de.tudarmstadt.ukp.dkpro.core.corenlp.CoreNlpLemmatizer;
 import de.tudarmstadt.ukp.dkpro.core.corenlp.CoreNlpPosTagger;
 import de.tudarmstadt.ukp.dkpro.core.corenlp.CoreNlpSegmenter;
 import de.tudarmstadt.ukp.dkpro.core.io.bincas.BinaryCasReader;
+import de.tudarmstadt.ukp.dkpro.core.opennlp.OpenNlpPosTagger;
 import de.tudarmstadt.ukp.dkpro.core.opennlp.OpenNlpSegmenter;
 import de.unidue.ltl.escrito.examples.basics.Experiments_ImplBase;
 import de.unidue.ltl.escrito.io.essay.AsapEssayReader;
@@ -125,19 +127,21 @@ public class BaselineExperiments extends Experiments_ImplBase{
 	 */
 	 public static AnalysisEngineDescription getPreprocessing(String languageCode) throws ResourceInitializationException {
 		 	
-		 	AnalysisEngineDescription seg = createEngineDescription(CoreNlpSegmenter.class,CoreNlpSegmenter.PARAM_LANGUAGE, "en");
-	        AnalysisEngineDescription tagger       = createEngineDescription(CoreNlpPosTagger.class,CoreNlpPosTagger.PARAM_LANGUAGE, "en");
+		 AnalysisEngineDescription tagger       = createEngineDescription(VocabAnnotator.class);
 
-	        AnalysisEngineDescription lemmatizer   = createEngineDescription(CoreNlpLemmatizer.class);
+	     AnalysisEngineDescription lemmatizer   = createEngineDescription(VocabAnnotator.class);
 
-	        AnalysisEngineDescription vocab = createEngineDescription(VocabAnnotator.class);
+	     AnalysisEngineDescription vocab = createEngineDescription(VocabAnnotator.class);
+	        
+	     tagger = createEngineDescription(OpenNlpPosTagger.class, OpenNlpPosTagger.PARAM_LANGUAGE, "en");
+	     lemmatizer = createEngineDescription(ClearNlpLemmatizer.class);
 
+	     return createEngineDescription(
+	    		 createEngineDescription(
 
-	        if (languageCode.equals("en")){
+	                    ClearNlpSegmenter.class
 
-	            return createEngineDescription(
-
-	                    seg,
+	                           ),
 
 	                    tagger,
 
@@ -146,40 +150,7 @@ public class BaselineExperiments extends Experiments_ImplBase{
 	                    vocab
 
 	                    );
-
-	        } else if (languageCode.equals("de")){
-
-	            return createEngineDescription(
-
-	                    createEngineDescription(
-
-	                            OpenNlpSegmenter.class
-
-	                            ),
-
-	                    tagger,
-
-	                    lemmatizer,
-
-	                    createEngineDescription(NoOpAnnotator.class)
-
-	                    );
-
-	        } else {
-
-	            System.err.println("Unknown language code "+languageCode+". We currently support: en, de");
-
-	            System.exit(-1);
-
-	        }
-
-	        return null;
-
 	    }
-
-
-
-
 
 
 }
