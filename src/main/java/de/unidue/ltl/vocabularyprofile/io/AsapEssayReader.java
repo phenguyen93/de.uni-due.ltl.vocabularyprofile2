@@ -257,7 +257,7 @@ class AsapItem{
 
 	protected int essayId;
 	protected String text;
-	protected int questionId;
+	protected int essaySetId;
 	protected int score;
 
 
@@ -267,7 +267,7 @@ class AsapItem{
 		StringBuilder sb = new StringBuilder();
 		sb.append(essayId);
 		sb.append("-");
-		sb.append(questionId);
+		sb.append(essaySetId);
 		sb.append(" ");
 		sb.append(score);
 		sb.append(" ");
@@ -277,12 +277,12 @@ class AsapItem{
 		return sb.toString();        
 	}
 
-	public AsapItem(int essayId, int essaySetId, int goldClass, String text)
+	public AsapItem(int essayId, int essaySetId, int score, String text)
 	{
-		this.questionId = essaySetId;
+		this.essaySetId = essaySetId;
 		this.essayId = essayId;
 		this.text = text;
-		this.score = goldClass;
+		this.score = score;
 
 	}
 	
@@ -298,12 +298,12 @@ class AsapItem{
 
 	public int getEssaySetId()
 	{
-		return questionId;
+		return essaySetId;
 	}
 
 	public void setEssaySetId(int essaySetId)
 	{
-		this.questionId = essaySetId;
+		this.essaySetId = essaySetId;
 	}
 
 	public int getScore()

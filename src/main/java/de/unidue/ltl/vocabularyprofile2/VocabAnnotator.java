@@ -18,6 +18,7 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
+import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 import de.unidue.ltl.escrito.core.types.VocabularyProfile_Type;
 import de.unidue.ltl.escrito.core.types.VocabularyProfile;
@@ -133,7 +134,9 @@ public class VocabAnnotator extends JCasAnnotator_ImplBase{
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
 		Collection<Token> tokens = JCasUtil.select(aJCas, Token.class);
+		
 		for (Token t : tokens){
+			System.out.println(t.getPos().getCoarseValue());
 			String token = t.getCoveredText().toLowerCase();
 			if (vocab1.containsKey(token)){
 				VocabularyProfile vp = new VocabularyProfile(aJCas);
@@ -157,7 +160,7 @@ public class VocabAnnotator extends JCasAnnotator_ImplBase{
 				vp.setLevel("Rang1");
 				vp.addToIndexes();
 			}else {
-				System.out.println(token);
+			//	System.out.println(token);
 			}
 		}
 	}
