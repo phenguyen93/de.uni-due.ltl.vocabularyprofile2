@@ -26,41 +26,46 @@ import de.unidue.ltl.escrito.io.essay.AsapEssayReader;
 import de.unidue.ltl.escrito.io.essay.AsapEssayReader.RatingBias;
 import de.unidue.ltl.vocabularyprofile.VocabAnnotator;
 import de.unidue.ltl.vocabularyprofile.io.MewsReader;
+import de.unidue.ltl.vocabularyprofile2.CVAnnotator;
+import de.unidue.ltl.vocabularyprofile2.CVAnnotator2;
+
 
 public class BaselineExperiments extends Experiments_ImplBase{
 
 	public static void main(String[] args) throws Exception {
 
 		System.setProperty("DKPRO_HOME", "C:\\Users\\ENVY\\workspace\\DKPRO_HOME");
+		String scoreFile = "D:\\BA\\MEWS_Essays\\MEWS_Essays\\MEWSdocs\\MEWS_FINAL_Deliverable_ScoreFile_120817.tsv";
 		String[] dataFolders = { 
-				"Prompts/AD", 
-				"Prompts/CH", 
-				"Prompts/TE", 
-				"Prompts/VO",
-				//				 "Deutschland/T1/AD", 
-				//				 "Deutschland/T1/CH",
-				//				 "Deutschland/T1/TE",
-				//				 "Deutschland/T1/VO",
-				//				 "Deutschland/T2/AD",
-				//				 "Deutschland/T2/CH",
-				//				 "Deutschland/T2/TE",
-				//				 "Deutschland/T2/VO",
-				//				 "Deutschland/T1T2/AD",
-				//				 "Deutschland/T1T2/CH",
-				//				 "Deutschland/T1T2/TE",
-				//				 "Deutschland/T1T2/VO",
-				//				 "Schweiz/T1T2/AD",
-				//				 "Schweiz/T1T2/CH",
-				//				 "Schweiz/T1T2/TE",
-				//				 "Schweiz/T1T2/VO",
-				//				 "Schweiz/T1/AD", 
-				//				 "Schweiz/T1/CH",
-				//				 "Schweiz/T1/TE",
-				//				 "Schweiz/T1/VO", 
-				//				 "Schweiz/T2/AD",
-				//				 "Schweiz/T2/CH",
-				//				 "Schweiz/T2/TE",
-				//				 "Schweiz/T2/VO",
+//				"Prompts/AD", 
+//				"Prompts/CH", 
+//				"Prompts/TE", 
+//				"Prompts/VO",
+//				  "Deutschland/T1/AD", 				
+//				  "Deutschland/T1/CH",
+//				  "Deutschland/T1/TE", 
+//				  "Deutschland/T1/VO",
+//				  "Deutschland/T2/AD", 
+//				  "Deutschland/T2/CH", 
+//				  "Deutschland/T2/TE",
+//				  "Deutschland/T2/VO",
+//				  "Deutschland/T1T2/AD",
+				  // "Deutschland/T1T2/CH", 
+				  //"Deutschland/T1T2/TE",
+				  // "Deutschland/T1T2/VO",
+				  // "Schweiz/T1T2/AD", 
+				  //"Schweiz/T1T2/CH",
+				  // "Schweiz/T1T2/TE",
+				  // "Schweiz/T1T2/VO",
+				  "Schweiz/T1/AD",
+//				  "Schweiz/T1/CH",
+//				  "Schweiz/T1/TE",
+//				  "Schweiz/T1/VO",
+//				  "Schweiz/T2/AD",
+//				  "Schweiz/T2/CH", 
+//				  "Schweiz/T2/TE",
+//				  "Schweiz/T2/VO",
+				 
 		};
 
 
@@ -69,16 +74,15 @@ public class BaselineExperiments extends Experiments_ImplBase{
 		runBasicAsapExperiment(essayPath_ASAP);
 
 //		for (String folder : dataFolders){
-//			// TODO: Pfad anpassen
-//			String essayPath = "/Users/andrea/dkpro/datasets/MEWS_Essays/Essays_all/";
-//			String scoreFile = "/Users/andrea/dkpro/datasets/MEWS_Essays/MEWSdocs/MEWS_FINAL_Deliverable_ScoreFile_120817.tsv";
+			// TODO: Pfad anpassen
+//			String essayPath = "D:\\BA\\MEWS_Essays\\MEWS_Essays\\Essays_all\\";
 //			runBasicMewsExperiment(essayPath+folder, scoreFile, "MEWS_"+folder.replace("/", "_"));
 //		}
 	}
 
 	private static void runBasicAsapExperiment(String trainData) throws Exception {
 		CollectionReaderDescription reader = CollectionReaderFactory.createReaderDescription(AsapEssayReader.class,
-				AsapEssayReader.PARAM_QUESTION_ID, 1, AsapEssayReader.PARAM_TARGET_LABEL, "score",
+				AsapEssayReader.PARAM_QUESTION_ID,1, AsapEssayReader.PARAM_TARGET_LABEL, "score",
 				AsapEssayReader.PARAM_RATING_BIAS, RatingBias.low, AsapEssayReader.PARAM_DO_SPARSECLASSMERGING, false,
 				AsapEssayReader.PARAM_DO_NORMALIZATION, false, AsapEssayReader.PARAM_INPUT_FILE, trainData);
 		runBaselineExperiment("ASAP1", reader, reader, "en");
@@ -111,7 +115,7 @@ public class BaselineExperiments extends Experiments_ImplBase{
 		ParameterSpace pSpace = null;
 		pSpace = new ParameterSpace(Dimension.createBundle("readers", dimReaders), learningDims,
 				Dimension.create(DIM_FEATURE_MODE, FM_UNIT), 
-				FeatureSettings.getFeatureSetNGrams(),
+				FeatureSettings.getFeatureTypeBasedEVPAndNgram(),
 				learningsArgsDims);
 
 		runCrossValidation(pSpace, experimentName, getPreprocessing("en"), 10);
@@ -126,31 +130,25 @@ public class BaselineExperiments extends Experiments_ImplBase{
 	 * }
 	 */
 	 public static AnalysisEngineDescription getPreprocessing(String languageCode) throws ResourceInitializationException {
-		 	
-		 AnalysisEngineDescription tagger       = createEngineDescription(VocabAnnotator.class);
+		 
+		 AnalysisEngineDescription seg = createEngineDescription(CoreNlpSegmenter.class,CoreNlpSegmenter.PARAM_LANGUAGE, "en");
+		 AnalysisEngineDescription tagger       = createEngineDescription(CoreNlpPosTagger.class, CoreNlpPosTagger.PARAM_LANGUAGE, "en");
 
-	     AnalysisEngineDescription lemmatizer   = createEngineDescription(VocabAnnotator.class);
+	     AnalysisEngineDescription lemmatizer   = createEngineDescription(CoreNlpLemmatizer.class);
 
 	     AnalysisEngineDescription vocab = createEngineDescription(VocabAnnotator.class);
 	        
-	     tagger = createEngineDescription(OpenNlpPosTagger.class, OpenNlpPosTagger.PARAM_LANGUAGE, "en");
-	     lemmatizer = createEngineDescription(ClearNlpLemmatizer.class);
-
 	     return createEngineDescription(
-	    		 createEngineDescription(
+	    		 	seg,
+   
+	                tagger,
 
-	                    ClearNlpSegmenter.class
+	                lemmatizer,
 
-	                           ),
+	                vocab
 
-	                    tagger,
-
-	                    lemmatizer,
-
-	                    vocab
-
-	                    );
-	    }
+	            );
+	}
 
 
 }

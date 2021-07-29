@@ -17,6 +17,9 @@ import de.tudarmstadt.ukp.dkpro.core.corenlp.CoreNlpSegmenter;
 import de.tudarmstadt.ukp.dkpro.core.io.bincas.BinaryCasWriter;
 import de.tudarmstadt.ukp.dkpro.core.io.xmi.XmiWriter;
 import de.tudarmstadt.ukp.dkpro.core.opennlp.OpenNlpChunker;
+import de.unidue.ltl.vocabularyprofile.io.AsapEssayReader;
+import de.unidue.ltl.vocabularyprofile.io.AsapEssayReader.RatingBias;
+import de.unidue.ltl.vocabularyprofile.io.MewsReader;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 public class BaseExperiment2 {
@@ -26,48 +29,51 @@ public class BaseExperiment2 {
 	}
 	
 	private static void preprocess() throws ResourceInitializationException, UIMAException, IOException {
-		String scoreFile= "src/main/resources/data/index_small.csv";
-		String essayPath = "src/main/resources/data/";
-		CollectionReaderDescription reader = CollectionReaderFactory.createReaderDescription(
-				Toefl11Reader.class,
-				Toefl11Reader.PARAM_INPUT_PATH, essayPath,
-				Toefl11Reader.PARAM_SCORE_FILE, scoreFile);
-
-		AnalysisEngineDescription seg = createEngineDescription(CoreNlpSegmenter.class,
-				CoreNlpSegmenter.PARAM_LANGUAGE, "en");
-		AnalysisEngineDescription posTagger = createEngineDescription(CoreNlpPosTagger.class,
-				CoreNlpPosTagger.PARAM_LANGUAGE, "en");
-		AnalysisEngineDescription lemmatizer = createEngineDescription(CoreNlpLemmatizer.class);
-		AnalysisEngineDescription chunker = createEngineDescription(OpenNlpChunker.class,
-				OpenNlpChunker.PARAM_LANGUAGE, "en");
-		AnalysisEngineDescription vocab = createEngineDescription(VocabAnnotator.class);
 		
-		AnalysisEngineDescription analyzer = createEngineDescription(Analyzer.class);
+		  String scoreFile= "src/main/resources/data/index_small.csv"; 
+		  String essayPath= "src/main/resources/data/"; 
+		  CollectionReaderDescription reader =CollectionReaderFactory.createReaderDescription( Toefl11Reader.class,
+		  Toefl11Reader.PARAM_INPUT_PATH, essayPath, Toefl11Reader.PARAM_SCORE_FILE,
+		  scoreFile);
+		 
+	
+			AnalysisEngineDescription seg = createEngineDescription(CoreNlpSegmenter.class,
+					CoreNlpSegmenter.PARAM_LANGUAGE, "en");
+			AnalysisEngineDescription posTagger = createEngineDescription(CoreNlpPosTagger.class,
+					CoreNlpPosTagger.PARAM_LANGUAGE, "en");
+			AnalysisEngineDescription lemmatizer = createEngineDescription(CoreNlpLemmatizer.class);
+			AnalysisEngineDescription chunker = createEngineDescription(OpenNlpChunker.class,
+					OpenNlpChunker.PARAM_LANGUAGE, "en");
+			AnalysisEngineDescription vocab = createEngineDescription(CVAnnotator2.class);
+			
+			AnalysisEngineDescription analyzer = createEngineDescription(Analyzer.class);
+			
+			AnalysisEngineDescription binCasWriter = createEngineDescription(
+					BinaryCasWriter.class, 
+					BinaryCasWriter.PARAM_FORMAT, "6+",
+					BinaryCasWriter.PARAM_OVERWRITE, true,
+					BinaryCasWriter.PARAM_TARGET_LOCATION, "target/bincas"
+					);
+			AnalysisEngineDescription xmiWriter = createEngineDescription(
+					XmiWriter.class, 
+					XmiWriter.PARAM_OVERWRITE, true,
+					XmiWriter.PARAM_TARGET_LOCATION, "target/cas"
+					);
+
+
+			SimplePipeline.runPipeline(reader, 
+					seg, 
+					posTagger, 
+					lemmatizer,
+//					chunker,
+					vocab,
+					analyzer,
+					xmiWriter,
+					binCasWriter
+					);
+		}
 		
-		AnalysisEngineDescription binCasWriter = createEngineDescription(
-				BinaryCasWriter.class, 
-				BinaryCasWriter.PARAM_FORMAT, "6+",
-				BinaryCasWriter.PARAM_OVERWRITE, true,
-				BinaryCasWriter.PARAM_TARGET_LOCATION, "target/bincas"
-				);
-		AnalysisEngineDescription xmiWriter = createEngineDescription(
-				XmiWriter.class, 
-				XmiWriter.PARAM_OVERWRITE, true,
-				XmiWriter.PARAM_TARGET_LOCATION, "target/cas"
-				);
-
-
-		SimplePipeline.runPipeline(reader, 
-				seg, 
-				posTagger, 
-				lemmatizer,
-//				chunker,
-				vocab,
-				analyzer,
-				xmiWriter,
-				binCasWriter
-				);
-	}
+	
 	
 	
 	

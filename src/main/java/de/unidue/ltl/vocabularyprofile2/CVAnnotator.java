@@ -25,7 +25,7 @@ import de.unidue.ltl.escrito.core.types.VocabularyProfile;
 
 
 
-public class VocabAnnotator extends JCasAnnotator_ImplBase{
+public class CVAnnotator extends JCasAnnotator_ImplBase{
 
 	
 	Map<String, String> vocab1;
@@ -136,18 +136,17 @@ public class VocabAnnotator extends JCasAnnotator_ImplBase{
 		Collection<Token> tokens = JCasUtil.select(aJCas, Token.class);
 		
 		for (Token t : tokens){
-			System.out.println(t.getPos().getCoarseValue());
 			String token = t.getCoveredText().toLowerCase();
 			if (vocab1.containsKey(token)){
 				VocabularyProfile vp = new VocabularyProfile(aJCas);
-				vp.setName("Crowdsourcing");
+				vp.setName(t.getPos().getCoarseValue());
 				vp.setBegin(t.getBegin());
 				vp.setEnd(t.getEnd());
 				vp.setLevel(vocab1.get(token));
 				vp.addToIndexes();
 			}else if (vocab1.containsKey(t.getLemma().getValue())){
 				VocabularyProfile vp = new VocabularyProfile(aJCas);
-				vp.setName("Crowdsourcing");
+				vp.setName(t.getPos().getCoarseValue());
 				vp.setBegin(t.getBegin());
 				vp.setEnd(t.getEnd());
 				vp.setLevel(vocab1.get(t.getLemma().getValue()));
@@ -160,7 +159,7 @@ public class VocabAnnotator extends JCasAnnotator_ImplBase{
 				vp.setLevel("Rang1");
 				vp.addToIndexes();
 			}else {
-			//	System.out.println(token);
+				System.out.println(token);
 			}
 		}
 	}

@@ -8,17 +8,25 @@ public class Vocabulary {
 		this.wordName = wordName;
 		this.wordType = wordType;
 	}
-	public String getWordType() {
+	public String getWordName() {
 		return wordName;
 	}
-	public void setWordType(String name) {
+	public void setWordName(String name) {
 		this.wordName = name;
 	}
-	public String getLevel() {
+	public String getWordType() {
 		return wordType;
 	}
-	public void setLevel(String pOS) {
+	public void setWordType(String pOS) {
 		this.wordType = pOS;
+	}
+	@Override
+	public int hashCode() {
+	    final int prime = 31;
+	    int result = 1;
+	    result = prime * result + ((wordName == null) ? 0 : wordName.hashCode());
+	    result = prime * result + ((wordType == null) ? 0 : wordType.hashCode());
+	    return result;
 	}
 	
 	@Override

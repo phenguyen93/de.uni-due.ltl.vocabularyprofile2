@@ -28,18 +28,26 @@ public class BaseExperiment {
 	}
 	
 	private static void preprocess() throws ResourceInitializationException, UIMAException, IOException {
-		/*
-		 * String scoreFile= "src/main/resources/data/index_small.csv"; String essayPath
-		 * = "src/main/resources/data/"; System.setProperty("DKPRO_HOME",
-		 * "C:\\Users\\ENVY\\workspace\\DKPRO_HOME"); CollectionReaderDescription reader
-		 * = CollectionReaderFactory.createReaderDescription( Toefl11Reader.class,
-		 * Toefl11Reader.PARAM_INPUT_PATH, essayPath, Toefl11Reader.PARAM_SCORE_FILE,
-		 * scoreFile);
-		 */
-		CollectionReaderDescription reader = CollectionReaderFactory.createReaderDescription(AsapEssayReader.class,
-				AsapEssayReader.PARAM_QUESTION_ID, 1, AsapEssayReader.PARAM_TARGET_LABEL, "score",
-				AsapEssayReader.PARAM_RATING_BIAS, RatingBias.low, AsapEssayReader.PARAM_DO_SPARSECLASSMERGING, false,
-				AsapEssayReader.PARAM_DO_NORMALIZATION, false, AsapEssayReader.PARAM_INPUT_FILE, "D:\\BA\\asap_essays Kopie\\training_set_rel3.tsv");
+		
+		  String scoreFile= "src/main/resources/data/index_small.csv"; String essayPath
+		  = "src/main/resources/data/"; System.setProperty("DKPRO_HOME",
+		  "C:\\Users\\ENVY\\workspace\\DKPRO_HOME"); CollectionReaderDescription reader
+		  = CollectionReaderFactory.createReaderDescription( Toefl11Reader.class,
+		  Toefl11Reader.PARAM_INPUT_PATH, essayPath, Toefl11Reader.PARAM_SCORE_FILE,
+		  scoreFile);
+		 
+		
+			/*
+			 * CollectionReaderDescription reader =
+			 * CollectionReaderFactory.createReaderDescription(AsapEssayReader.class,
+			 * AsapEssayReader.PARAM_QUESTION_ID, 1, AsapEssayReader.PARAM_TARGET_LABEL,
+			 * "score", AsapEssayReader.PARAM_RATING_BIAS, RatingBias.low,
+			 * AsapEssayReader.PARAM_DO_SPARSECLASSMERGING, false,
+			 * AsapEssayReader.PARAM_DO_NORMALIZATION, false,
+			 * AsapEssayReader.PARAM_INPUT_FILE,
+			 * "D:\\BA\\asap_essays Kopie\\training_set_rel3.tsv");
+			 */
+		 
 
 		AnalysisEngineDescription seg = createEngineDescription(CoreNlpSegmenter.class,
 				CoreNlpSegmenter.PARAM_LANGUAGE, "en");

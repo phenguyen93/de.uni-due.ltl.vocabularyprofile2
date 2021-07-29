@@ -88,10 +88,49 @@ public class VocabAnnotator extends JCasAnnotator_ImplBase{
 	            e.printStackTrace();
 	        }
 		}
-		/*
-		 * for (String i : vocab.keySet()) { System.out.println("key: " + i + " value: "
-		 * + vocab.get(i)); }
-		 */
+		//load extended Dictionary
+		for (int j = 0; j < 5; j++) {			
+			try{
+				
+	            FileInputStream file = new FileInputStream(new File("D:\\BA\\ExtendDictionary.xlsx"));
+	 
+	            //Create Workbook instance holding reference to .xlsx file
+	            XSSFWorkbook workbook = new XSSFWorkbook(file);
+	 
+	            //Get first/desired sheet from the workbook
+	            XSSFSheet sheet = workbook.getSheetAt(j);
+	 
+	            //Iterate through each rows one by one
+	            Iterator<Row> rowIterator = sheet.iterator();
+	            while (rowIterator.hasNext()) 
+	            {
+	                Row row = rowIterator.next();
+	                //For each row, iterate through all the columns
+	                Iterator<Cell> cellIterator = row.cellIterator();
+	                ArrayList<String> temp = new ArrayList<String>();
+	                while (cellIterator.hasNext()){
+	                    Cell cell = cellIterator.next();
+	                    //Check the cell type and format accordingly
+						
+						  switch (cell.getCellType()) { 
+						  case Cell.CELL_TYPE_NUMERIC:
+	//						  System.out.print(cell.getNumericCellValue()); 
+						  break; 
+						  case	Cell.CELL_TYPE_STRING: 
+							  temp.add(cell.getStringCellValue().toLowerCase());					 						  
+						  break; 
+						  }
+						 
+	                }
+	               vocab.put(new Vocabulary(temp.get(0),temp.get(1)), temp.get(2));
+	               	}
+	            file.close();
+	        } 
+	        catch (Exception e) 
+	        {
+	            e.printStackTrace();
+	        }
+		}
 		
 	}
 	
@@ -106,60 +145,66 @@ public class VocabAnnotator extends JCasAnnotator_ImplBase{
 		Collection<Token> tokens = JCasUtil.select(aJCas, Token.class);
 		for (Token t : tokens){
 			String lemma = t.getLemma().getValue().toLowerCase();
-			String pOS =   t.getPos().getPosValue();
+//			String pOS =   t.getPos().getPosValue();
 			String wordType = "";
 
 			//change Tagset to compaire with types of words in the EVP-Wordlist
-			if(pOS.equals("NN")||pOS.equals("NNP")||pOS.equals("NNPS")||pOS.equals("NNS")||pOS.equals("NP")||pOS.equals("NPS")){
-				wordType = "noun";
-			}else if(pOS.equals("VBD")||pOS.equals("VBG")||pOS.equals("VBN")||pOS.equals("VBP")||pOS.equals("VBZ")||pOS.equals("VB")) {
-				wordType = "verb";
-			}else if(pOS.equals("JJ")||pOS.equals("JJR")||pOS.equals("JJS")) {
-				wordType = "adjective";
-			}else if(pOS.equals("MD")) {
-				wordType = "modal verb";
-			}else if(pOS.equals("DT")||pOS.equals("WDT")) {
-				wordType = "determiner";
-			}else if(pOS.equals("RB")||pOS.equals("RBR")||pOS.equals("RBS")||pOS.equals("WRB")||pOS.equals("EX")) {
-				wordType = "adverb";
-			}else if(pOS.equals("IN")) {
-				wordType = "preposition";
-			}else if(pOS.equals("PP")||pOS.equals("PP$")||pOS.equals("WP")||pOS.equals("WP$")||pOS.equals("PRP")) {
-				wordType = "pronoun";	
-			}else {
-				wordType = "none";
+			if(t.getPos().getCoarseValue()!= null) {
+				if(t.getPos().getCoarseValue().equals("NOUN")){
+					wordType = "noun";
+				}else if(t.getPos().getCoarseValue().equals("VERB")) {
+					wordType = "verb";
+				}else if(t.getPos().getCoarseValue().equals("ADJ")) {
+					wordType = "adjective";
+				}else if(t.getPos().getCoarseValue().equals("DET")) {
+					wordType = "determiner";
+				}else if(t.getPos().getCoarseValue().equals("ADV")) {
+					wordType = "adverb";
+				}else if(t.getPos().getCoarseValue().equals("ADP")) {
+					wordType = "preposition";
+				}else if(t.getPos().getCoarseValue().equals("PRON")) {
+					wordType = "pronoun";
+				}else if(t.getPos().getCoarseValue().equals("NUM")) {
+					wordType = "NUM";	
+				}else {
+					wordType = "none";
+				}
 			}
 			Vocabulary vocabulary = new Vocabulary(lemma,wordType);
-			
-			for (Vocabulary vo : sortByValue(vocab).keySet()) {
-				if(vo.equals(vocabulary)) {
-					VocabularyProfile vp = new VocabularyProfile(aJCas);
-					vp.setName(t.getLemma().getValue());
-					vp.setBegin(t.getBegin());
-					vp.setEnd(t.getEnd());
-					vp.setLevel(vocab.get(vo));
-					vp.addToIndexes();
-					break;
-				}
 				
-			}
-			
 			/*
-			 * if (vocab.containsKey(lemma)){
-			 * if(vocab.get(lemma).getWordType().equals(wordType)) { VocabularyProfile vp =
-			 * new VocabularyProfile(aJCas); vp.setName("Cambridge");
-			 * vp.setBegin(t.getBegin()); vp.setEnd(t.getEnd());
-			 * vp.setLevel(vocab.get(lemma)); vp.addToIndexes(); }
+			 * for (Vocabulary vo : sortByValue(vocab).keySet()) {
+			 * if(vo.equals(vocabulary)){ VocabularyProfile vp = new
+			 * VocabularyProfile(aJCas); vp.setName(t.getLemma().getValue());
+			 * vp.setBegin(t.getBegin()); vp.setEnd(t.getEnd()); vp.setLevel(vocab.get(vo));
+			 * vp.addToIndexes(); break; }
 			 * 
 			 * }
 			 */
+			 
+			 
 			
-			/*
-			 * if (vocab.containsKey(vocabulary)){ VocabularyProfile vp = new
-			 * VocabularyProfile(aJCas); vp.setName("Cambridge"); vp.setBegin(t.getBegin());
-			 * vp.setEnd(t.getEnd()); vp.setLevel(); vp.addToIndexes(); }else {
-			 * System.out.println(t.getLemma().getValue()); }
-			 */
+			
+			  if (vocab.containsKey(vocabulary)){ 
+				  VocabularyProfile vp = new VocabularyProfile(aJCas); 
+				  vp.setName(wordType); 
+				  vp.setBegin(t.getBegin());
+				  vp.setEnd(t.getEnd()); 
+				  vp.setLevel(vocab.get(vocabulary)); 
+				  vp.addToIndexes(); 
+			  }else if(wordType.equals("NUM")) {
+				  VocabularyProfile vp = new VocabularyProfile(aJCas); 
+				  vp.setName(wordType); 
+				  vp.setBegin(t.getBegin());
+				  vp.setEnd(t.getEnd()); 
+				  vp.setLevel("A1"); 
+				  vp.addToIndexes(); 
+			  }else if(t.getPos().getCoarseValue() != null) {
+				  if(!t.getPos().getCoarseValue().equals("PUNCT")) {
+					  System.out.println(t.getCoveredText()+" ,"+lemma+"--"+t.getPos().getCoarseValue()); 
+				  }
+			  }
+			 
 		}
 	}
 	//sortiere Map in aufsteigende Reihe von Values A1-C2
@@ -174,5 +219,19 @@ public class VocabAnnotator extends JCasAnnotator_ImplBase{
 
         return result;
     }
+	//superlative
+	public static String getLemmaFromSuperlative(String word) {
+		String lemma = "";
+		if(word != null && word.length() >= 3) {
+			if(word.substring(word.length() - 3 ).equals("ier")) {
+				lemma = word.substring(0,word.length()-3)+"y";
+			}
+			if(word.substring(word.length() - 2 ).equals("er")) {
+				lemma = word.substring(0,word.length()-2);
+			}
+		}
+	
+		return lemma;
+	}
 
 }

@@ -63,10 +63,10 @@ public class MewsReader extends JCasCollectionReader_ImplBase {
 
 	protected Queue<MewsItem> items;
 
-	Map<Integer, Integer> scorePerId_AD = new HashMap<Integer, Integer>();
-	Map<Integer, Integer> scorePerId_CH = new HashMap<Integer, Integer>();
-	Map<Integer, Integer> scorePerId_TE = new HashMap<Integer, Integer>();
-	Map<Integer, Integer> scorePerId_VO = new HashMap<Integer, Integer>();
+	Map<Integer, Float> scorePerId_AD = new HashMap<Integer, Float>();
+	Map<Integer, Float> scorePerId_CH = new HashMap<Integer, Float>();
+	Map<Integer, Float> scorePerId_TE = new HashMap<Integer, Float>();
+	Map<Integer, Float> scorePerId_VO = new HashMap<Integer, Float>();
 
 	@Override
 	public void initialize(UimaContext aContext) throws ResourceInitializationException {
@@ -91,7 +91,7 @@ public class MewsReader extends JCasCollectionReader_ImplBase {
 					continue;
 				}
 				// System.out.println(text);
-				int score = -1;
+				float score = -1;
 				// System.out.println(studentId);
 				try {
 					if (id.endsWith("AD")) {
@@ -106,8 +106,15 @@ public class MewsReader extends JCasCollectionReader_ImplBase {
 
 					MewsItem item = new MewsItem(id, text, score);
 					items.add(item);
+					
 				} catch (NullPointerException e) {
 					System.err.println(e.getMessage());
+				}
+			}
+			System.out.println("Read "+items.size()+" items.");
+			for(MewsItem i : items) {
+				if(i.getScore()==0.0) {
+					System.out.println(i.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -147,28 +154,45 @@ public class MewsReader extends JCasCollectionReader_ImplBase {
 					System.err.println(e.getMessage());
 				}
 			}
-			int independent1 = -1;
-			int independent2 = -1;
-			int integrated1 = -1;
-			int integrated2 = -1;
+			float independent1 = -1;
+			float independent2 = -1;
+			float integrated1 = -1;
+			float integrated2 = -1;
 
 			try {
-				independent1 = Integer.parseInt(parts[8]);
+				//convert komma to point for Float
+				String score = parts[11];
+				if(score.contains(",")) {
+					score = score.replace(",", ".");
+				}
+				independent1 = Float.parseFloat(score);
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
 			}
 			try {
-				independent2 = Integer.parseInt(parts[16]);
+				String score = parts[19];
+				if(score.contains(",")) {
+					score = score.replace(",", ".");
+				}
+				independent2 = Float.parseFloat(score);
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
 			}
 			try {
-				integrated1 = Integer.parseInt(parts[12]);
+				String score = parts[15];
+				if(score.contains(",")) {
+					score = score.replace(",", ".");
+				}
+				integrated1 = Float.parseFloat(score);
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
 			}
 			try {
-				integrated2 = Integer.parseInt(parts[20]);
+				String score = parts[23];
+				if(score.contains(",")) {
+					score = score.replace(",", ".");
+				}
+				integrated2 = Float.parseFloat(score);
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
 			}

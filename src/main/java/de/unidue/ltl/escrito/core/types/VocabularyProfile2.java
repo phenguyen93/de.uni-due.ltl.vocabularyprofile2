@@ -14,12 +14,12 @@ import org.apache.uima.jcas.tcas.Annotation;
  * Updated by JCasGen Fri May 21 18:45:18 CEST 2021
  * XML source: /Users/andrea/Documents/Programmierung/workspace_ASAS/de.uni-due.ltl.vocabularyprofile/src/main/resources/desc/type/Escrito.xml
  * @generated */
-public class VocabularyProfile extends Annotation {
+public class VocabularyProfile2 extends Annotation {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(VocabularyProfile.class);
+  public final static int typeIndexID = JCasRegistry.register(VocabularyProfile2.class);
   /** @generated
    * @ordered 
    */
@@ -33,14 +33,14 @@ public class VocabularyProfile extends Annotation {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected VocabularyProfile() {/* intentionally empty block */}
+  protected VocabularyProfile2() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public VocabularyProfile(int addr, TOP_Type type) {
+  public VocabularyProfile2(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -48,7 +48,7 @@ public class VocabularyProfile extends Annotation {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public VocabularyProfile(JCas jcas) {
+  public VocabularyProfile2(JCas jcas) {
     super(jcas);
     readObject();   
   } 
@@ -58,7 +58,7 @@ public class VocabularyProfile extends Annotation {
    * @param begin offset to the begin spot in the SofA
    * @param end offset to the end spot in the SofA 
   */  
-  public VocabularyProfile(JCas jcas, int begin, int end) {
+  public VocabularyProfile2(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
     setEnd(end);
@@ -84,44 +84,33 @@ public class VocabularyProfile extends Annotation {
    * @return value of the feature 
    */
   public String getName() {
-    if (VocabularyProfile_Type.featOkTst && ((VocabularyProfile_Type)jcasType).casFeat_name == null)
+    if (VocabularyProfile_Type2.featOkTst && ((VocabularyProfile_Type2)jcasType).casFeat_name == null)
       jcasType.jcas.throwFeatMissing("name", "de.unidue.ltl.escrito.core.types.VocabularyProfile");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((VocabularyProfile_Type)jcasType).casFeatCode_name);}
+    return jcasType.ll_cas.ll_getStringValue(addr, ((VocabularyProfile_Type2)jcasType).casFeatCode_name);}
     
   /** setter for name - sets  
    * @generated
    * @param v value to set into the feature 
    */
   public void setName(String v) {
-    if (VocabularyProfile_Type.featOkTst && ((VocabularyProfile_Type)jcasType).casFeat_name == null)
+    if (VocabularyProfile_Type2.featOkTst && ((VocabularyProfile_Type2)jcasType).casFeat_name == null)
       jcasType.jcas.throwFeatMissing("name", "de.unidue.ltl.escrito.core.types.VocabularyProfile");
-    jcasType.ll_cas.ll_setStringValue(addr, ((VocabularyProfile_Type)jcasType).casFeatCode_name, v);}    
-   
-  /** getter for lemma - gets 
-   * @generated
-   * @return value of the feature 
-   */
-	/*
-	 * public String getLemma() { if (VocabularyProfile_Type.featOkTst &&
-	 * ((VocabularyProfile_Type)jcasType).casFeat_lemma == null)
-	 * jcasType.jcas.throwFeatMissing("lemma",
-	 * "de.unidue.ltl.escrito.core.types.VocabularyProfile"); return
-	 * jcasType.ll_cas.ll_getStringValue(addr,
-	 * ((VocabularyProfile_Type)jcasType).casFeatCode_lemma);}
-	 */
+    jcasType.ll_cas.ll_setStringValue(addr, ((VocabularyProfile_Type2)jcasType).casFeatCode_name, v);}    
+  
+  public String getLemma() {
+	    if (VocabularyProfile_Type2.featOkTst && ((VocabularyProfile_Type2)jcasType).casFeat_lemma == null)
+	      jcasType.jcas.throwFeatMissing("lemma", "de.unidue.ltl.escrito.core.types.VocabularyProfile");
+	    return jcasType.ll_cas.ll_getStringValue(addr, ((VocabularyProfile_Type2)jcasType).casFeatCode_lemma);}
+	    
+	  /** setter for name - sets  
+	   * @generated
+	   * @param v value to set into the feature 
+	   */
+	  public void setLemma(String v) {
+	    if (VocabularyProfile_Type2.featOkTst && ((VocabularyProfile_Type2)jcasType).casFeat_name == null)
+	      jcasType.jcas.throwFeatMissing("name", "de.unidue.ltl.escrito.core.types.VocabularyProfile");
+	    jcasType.ll_cas.ll_setStringValue(addr, ((VocabularyProfile_Type2)jcasType).casFeatCode_name, v);}    
     
-  /** setter for lemma - sets  
-   * @generated
-   * @param v value to set into the feature 
-   */
-	/*
-	 * public void setLemma(String v) { if (VocabularyProfile_Type.featOkTst &&
-	 * ((VocabularyProfile_Type)jcasType).casFeat_lemma == null)
-	 * jcasType.jcas.throwFeatMissing("lemma",
-	 * "de.unidue.ltl.escrito.core.types.VocabularyProfile");
-	 * jcasType.ll_cas.ll_setStringValue(addr,
-	 * ((VocabularyProfile_Type)jcasType).casFeatCode_lemma, v);}
-	 */
   //*--------------*
   //* Feature: level
 
@@ -130,18 +119,18 @@ public class VocabularyProfile extends Annotation {
    * @return value of the feature 
    */
   public String getLevel() {
-    if (VocabularyProfile_Type.featOkTst && ((VocabularyProfile_Type)jcasType).casFeat_level == null)
+    if (VocabularyProfile_Type2.featOkTst && ((VocabularyProfile_Type2)jcasType).casFeat_level == null)
       jcasType.jcas.throwFeatMissing("level", "de.unidue.ltl.escrito.core.types.VocabularyProfile");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((VocabularyProfile_Type)jcasType).casFeatCode_level);}
+    return jcasType.ll_cas.ll_getStringValue(addr, ((VocabularyProfile_Type2)jcasType).casFeatCode_level);}
     
   /** setter for level - sets  
    * @generated
    * @param v value to set into the feature 
    */
   public void setLevel(String v) {
-    if (VocabularyProfile_Type.featOkTst && ((VocabularyProfile_Type)jcasType).casFeat_level == null)
+    if (VocabularyProfile_Type2.featOkTst && ((VocabularyProfile_Type2)jcasType).casFeat_level == null)
       jcasType.jcas.throwFeatMissing("level", "de.unidue.ltl.escrito.core.types.VocabularyProfile");
-    jcasType.ll_cas.ll_setStringValue(addr, ((VocabularyProfile_Type)jcasType).casFeatCode_level, v);}    
+    jcasType.ll_cas.ll_setStringValue(addr, ((VocabularyProfile_Type2)jcasType).casFeatCode_level, v);}    
   }
 
     

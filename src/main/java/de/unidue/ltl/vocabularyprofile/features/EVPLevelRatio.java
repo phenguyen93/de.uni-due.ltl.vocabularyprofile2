@@ -27,7 +27,7 @@ import de.unidue.ltl.escrito.core.types.VocabularyProfile;
  */
 
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS" })
-public class VocabLevelRatio extends FeatureExtractorResource_ImplBase implements FeatureExtractor
+public class EVPLevelRatio extends FeatureExtractorResource_ImplBase implements FeatureExtractor
 {
 	public static final String FN_A1Ratio = "A1Ratio";
 	public static final String FN_A2Ratio = "A2Ratio";
@@ -35,6 +35,7 @@ public class VocabLevelRatio extends FeatureExtractorResource_ImplBase implement
 	public static final String FN_B2Ratio = "B2Ratio";
 	public static final String FN_C1Ratio = "C1Ratio";
 	public static final String FN_C2Ratio = "C2Ratio";
+	public static final String FN_NoneRatio = "NoneRatio";
 	
 
 	@Override
@@ -72,6 +73,7 @@ public class VocabLevelRatio extends FeatureExtractorResource_ImplBase implement
 		double b2 = (1.0*numberOfB2)/numberOfTokens;
 		double c1 = (1.0*numberOfC1)/numberOfTokens;
 		double c2 = (1.0*numberOfC2)/numberOfTokens;
+		double none = (1.0*(numberOfTokens-numberOfA1-numberOfA2-numberOfB1-numberOfB2-numberOfC1-numberOfC2))/numberOfTokens;
 		
 		
 		Set<Feature> features = new HashSet<Feature>();
@@ -81,6 +83,7 @@ public class VocabLevelRatio extends FeatureExtractorResource_ImplBase implement
 		features.add(new Feature(FN_B2Ratio, b2, FeatureType.NUMERIC));
 		features.add(new Feature(FN_C1Ratio, c1, FeatureType.NUMERIC));
 		features.add(new Feature(FN_C2Ratio, c2, FeatureType.NUMERIC));
+		features.add(new Feature(FN_NoneRatio, none, FeatureType.NUMERIC));
 		return features;
 	}
 

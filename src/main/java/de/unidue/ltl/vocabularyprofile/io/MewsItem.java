@@ -4,7 +4,7 @@ public class MewsItem {
 
 	private String id;
 	private String text;
-	private int score;
+	private float score;
 
 	public String getId() {
 		return id;
@@ -14,11 +14,11 @@ public class MewsItem {
 		return text;
 	}
 
-	public int getScore() {
+	public float getScore() {
 		return score;
 	}
 
-	public MewsItem(String id, String text, int score) {
+	public MewsItem(String id, String text, float score) {
 		this.id = id;
 		this.text = text;
 		this.score = score;
